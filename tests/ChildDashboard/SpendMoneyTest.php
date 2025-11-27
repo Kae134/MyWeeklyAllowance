@@ -17,7 +17,7 @@ class SpendMoneyTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->service = new ChildDashboardService();
+        $this->service = new ChildDashboardService("child@example.com");
     }
 
     public function testShouldRemoveMoneyFromChild(): void

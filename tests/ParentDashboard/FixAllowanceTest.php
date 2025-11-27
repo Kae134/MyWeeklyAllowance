@@ -13,7 +13,7 @@ class FixAllowanceTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->service = new ParentDashboardService();
+        $this->service = new ParentDashboardService("parent@example.com");
     }
 
     public function testShouldFixAllowanceToChild(): void
