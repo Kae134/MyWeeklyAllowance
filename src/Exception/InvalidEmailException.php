@@ -2,6 +2,4 @@
 
 namespace MyWeeklyAllowance\Exception;
 
-class InvalidEmailException extends \Exception
-{
-}
+class InvalidEmailException extends \Exception {}

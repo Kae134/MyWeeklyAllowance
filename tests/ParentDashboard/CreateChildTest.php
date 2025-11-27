@@ -27,14 +27,14 @@ class CreateChildTest extends TestCase
     public function testShouldCreateChildWithValidData(): void
     {
         $result = $this->service->createChild(
-            "child@example.com",
+            "newchild@example.com",
             "ValidPassword123!",
             "Doe",
             "Jane",
         );
 
         $this->assertInstanceOf(ChildData::class, $result);
-        $this->assertEquals("child@example.com", $result->email);
+        $this->assertEquals("newchild@example.com", $result->email);
         $this->assertEquals("Doe", $result->name);
         $this->assertEquals("Jane", $result->firstname);
         $this->assertEquals(0.0, $result->balance);

@@ -2,6 +2,4 @@
 
 namespace MyWeeklyAllowance\Exception;
 
-class MissingAmountException extends \Exception
-{
-}
+class MissingAmountException extends \Exception {}

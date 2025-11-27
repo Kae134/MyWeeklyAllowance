@@ -2,6 +2,4 @@
 
 namespace MyWeeklyAllowance\Exception;
 
-class EmailAlreadyInUseException extends \Exception
-{
-}
+class EmailAlreadyInUseException extends \Exception {}

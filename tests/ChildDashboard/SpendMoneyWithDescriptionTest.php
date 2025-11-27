@@ -19,7 +19,7 @@ class SpendMoneyWithDescriptionTest extends TestCase
     private ParentDashboardService $parentService;
     private UserRepository $userRepository;
     private const CHILD_EMAIL = "child@test.com";
-    private const CHILD_PASSWORD = "ChildPassword123!";
+    private const CHILD_PASSWORD = "ValidPassword123!";
     private const PARENT_EMAIL = "parent@test.com";
 
     protected function setUp(): void
@@ -27,7 +27,6 @@ class SpendMoneyWithDescriptionTest extends TestCase
         Database::resetForTesting();
         Database::setTestMode();
 
-        $this->childService = new ChildDashboardService();
         $this->parentService = new ParentDashboardService(self::PARENT_EMAIL);
         $this->userRepository = new UserRepository();
 
@@ -36,12 +35,14 @@ class SpendMoneyWithDescriptionTest extends TestCase
             self::CHILD_EMAIL,
             self::CHILD_PASSWORD,
             "Doe",
-            "Alice"
+            "Alice",
         );
 
         // Ajouter de l'argent à l'enfant
         $this->userRepository->updateUserBalance(self::CHILD_EMAIL, 100.0);
         $this->userRepository->updateChildBalance(self::CHILD_EMAIL, 100.0);
+
+        $this->childService = new ChildDashboardService(self::CHILD_EMAIL);
     }
 
     protected function tearDown(): void
@@ -51,13 +52,15 @@ class SpendMoneyWithDescriptionTest extends TestCase
 
     public function testShouldRemoveMoneyFromChildAndCreateExpense(): void
     {
-        $initialBalance = $this->userRepository->getUserBalance(self::CHILD_EMAIL);
+        $initialBalance = $this->userRepository->getUserBalance(
+            self::CHILD_EMAIL,
+        );
 
         $expenseId = $this->childService->spendMoneyWithDescription(
             self::CHILD_EMAIL,
             self::CHILD_PASSWORD,
             50.0,
-            "Achat de fournitures"
+            "Achat de fournitures",
         );
 
         $newBalance = $this->userRepository->getUserBalance(self::CHILD_EMAIL);
@@ -73,7 +76,7 @@ class SpendMoneyWithDescriptionTest extends TestCase
             self::CHILD_EMAIL,
             self::CHILD_PASSWORD,
             25.0,
-            "Sortie au cinéma"
+            "Sortie au cinéma",
         );
 
         $this->assertIsInt($expenseId);
@@ -91,7 +94,7 @@ class SpendMoneyWithDescriptionTest extends TestCase
             self::CHILD_EMAIL,
             self::CHILD_PASSWORD,
             200.0,
-            "Dépense trop élevée"
+            "Dépense trop élevée",
         );
     }
 
@@ -103,7 +106,7 @@ class SpendMoneyWithDescriptionTest extends TestCase
             self::CHILD_EMAIL,
             self::CHILD_PASSWORD,
             0.0,
-            "Description"
+            "Description",
         );
     }
 
@@ -115,7 +118,7 @@ class SpendMoneyWithDescriptionTest extends TestCase
             self::CHILD_EMAIL,
             self::CHILD_PASSWORD,
             -10.0,
-            "Montant négatif"
+            "Montant négatif",
         );
     }
 
@@ -127,7 +130,7 @@ class SpendMoneyWithDescriptionTest extends TestCase
             self::CHILD_EMAIL,
             "",
             10.0,
-            "Description"
+            "Description",
         );
     }
 
@@ -139,7 +142,7 @@ class SpendMoneyWithDescriptionTest extends TestCase
             self::CHILD_EMAIL,
             "123",
             10.0,
-            "Description"
+            "Description",
         );
     }
 
@@ -149,7 +152,7 @@ class SpendMoneyWithDescriptionTest extends TestCase
             self::CHILD_EMAIL,
             self::CHILD_PASSWORD,
             10.0,
-            ""
+            "",
         );
 
         $this->assertIsInt($expenseId);
@@ -163,8 +166,8 @@ class SpendMoneyWithDescriptionTest extends TestCase
         $expenseId = $this->childService->spendMoneyWithDescription(
             self::CHILD_EMAIL,
             self::CHILD_PASSWORD,
-            15.50,
-            $description
+            15.5,
+            $description,
         );
 
         // Vérifier que la description est dans la base

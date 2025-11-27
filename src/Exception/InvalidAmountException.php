@@ -2,6 +2,4 @@
 
 namespace MyWeeklyAllowance\Exception;
 
-class InvalidAmountException extends \Exception
-{
-}
+class InvalidAmountException extends \Exception {}

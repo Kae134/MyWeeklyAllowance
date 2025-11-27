@@ -2,6 +2,4 @@
 
 namespace MyWeeklyAllowance\Exception;
 
-class EmailNotFoundInDatabaseException extends \Exception
-{
-}
+class EmailNotFoundInDatabaseException extends \Exception {}
