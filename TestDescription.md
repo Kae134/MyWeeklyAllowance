@@ -10,7 +10,7 @@ Login :
      - shouldThrowExceptionWhenEmailIsInvalid : verify that an exception is thrown when the email is not well formated
   
   Password :
-     - shouldThrowExceptionWhenPasswordIsNotMissing : verify that an exception is thrown when the password is not entered
+     - shouldThrowExceptionWhenPasswordIsMissing : verify that an exception is thrown when the password is not entered
      - shouldThrowExceptionWhenPasswordDoesNotMatchUserEmail : verify that an exception is thrown when the password doesnt match the one of the email
      - shouldThrowExceptionWhenPasswordIsInvalid : verify that an exception is thrown when the password is not well formated
     
@@ -42,7 +42,7 @@ Dashboard :
   Parent :
     Create account for child :
       Global :
-         - shouldCreateChildWithValidData : verify that the parent can create a child user when all the valid infos are entered.
+         - shouldCreateChildWithValidData : verify that the parent can create a child user when all the valid infos are entered and the child is linked to the parent.
          - shouldThrowExceptionWhenEmailIsAlreadyInUse : verify that no user is created with the same email 
         
       Email :
@@ -61,11 +61,17 @@ Dashboard :
         - shouldThrowExceptionWhenFirstnameIsMissing : verify that an exception is thrown when the Firstname is not entered
         - shouldThrowExceptionWhenFirstnameIsInvalid : verify that an exception is thrown when the Firstname is not well formated
   
+    Get My Children :
+      Global :
+        - shouldReturnOnlyParentOwnChildren : verify that the parent can only see their own children
+        - shouldReturnEmptyArrayWhenParentHasNoChildren : verify that an empty array is returned when the parent has no children
+        - shouldReturnChildrenOrderedByName : verify that children are returned ordered by name and firstname
+  
     Deposit Money on child account :
       Global :
         - shouldAddMoneyToChildAccount : verify that money has been added to child
         - shouldRemoveMoneyFromParent : verify that money has been removed from parent
-        - shouldThrowExceptionWhenNotEnoughMoney : verify that an exception is thrown when there is not enought money on the parent account for the transfer
+        - shouldThrowExceptionWhenNotEnoughMoney : verify that an exception is thrown when there is not enough money on the parent account for the transfer
     
       Amount :
         - shouldThrowExceptionWhenAmountIsMissing : verify that an exception is thrown when the amount is not entered
@@ -87,9 +93,9 @@ Dashboard :
       
       Expense Id :
         - shouldThrowExceptionWhenExpenseIdIsMissing : verify that an exception is thrown when the Expense id is missing
-        - shouldThrowExceptionWhenExpenseIdNotInDb : verify that an exception is thrown when the Expense is in the db
+        - shouldThrowExceptionWhenExpenseIdNotInDb : verify that an exception is thrown when the Expense is not in the db
      
-    Fix Monthly Allowance :
+    Fix Weekly Allowance :
       Global :
         - shouldFixAllowanceToChild : verify that an allowance has been added to the child
           
@@ -106,16 +112,34 @@ Dashboard :
         - shouldThrowExceptionWhenAmountIsInvalid : verify that an exception is thrown when the amount is not well formated
      
   Child :
-    Spend money :
+    Spend Money :
       Global :
         - shouldRemoveMoneyFromChild : verify that money has been removed from the user
-        - shouldThrowExceptionWhenNotEnoughMoney : verify that an exception is thrown when there is not enought money on the child account
+        - shouldThrowExceptionWhenNotEnoughMoney : verify that an exception is thrown when there is not enough money on the child account
       
       Amount :
         - shouldThrowExceptionWhenAmountIsMissing : verify that an exception is thrown when the amount is not entered
         - shouldThrowExceptionWhenAmountIsInvalid : verify that an exception is thrown when the amount is not well formated
     
       Password :
-        - shouldThrowExceptionWhenPasswordDoesNotMatchParent : verify that an exception is thrown when the password is not the one of the parent
+        - shouldThrowExceptionWhenPasswordDoesNotMatchChild : verify that an exception is thrown when the password is not the one of the child
         - shouldThrowExceptionWhenPasswordIsMissing : verify that an exception is thrown when the password is not entered
         - shouldThrowExceptionWhenPasswordIsInvalid : verify that an exception is thrown when the password is not well formated
+
+    Spend Money With Description :
+      Global :
+        - shouldRemoveMoneyFromChildAndCreateExpense : verify that money is removed and an expense is created in the database
+        - shouldReturnExpenseId : verify that the expense ID is returned after creation
+        - shouldThrowExceptionWhenNotEnoughMoney : verify that an exception is thrown when there is not enough money on the child account
+      
+      Amount :
+        - shouldThrowExceptionWhenAmountIsMissing : verify that an exception is thrown when the amount is not entered
+        - shouldThrowExceptionWhenAmountIsInvalid : verify that an exception is thrown when the amount is not well formated
+    
+      Password :
+        - shouldThrowExceptionWhenPasswordIsMissing : verify that an exception is thrown when the password is not entered
+        - shouldThrowExceptionWhenPasswordIsInvalid : verify that an exception is thrown when the password is not well formated
+      
+      Description :
+        - shouldAcceptEmptyDescription : verify that an empty description is accepted
+        - shouldSaveDescriptionCorrectly : verify that the description is saved correctly in the database

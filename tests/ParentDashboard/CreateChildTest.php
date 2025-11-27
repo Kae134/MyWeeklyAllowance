@@ -21,7 +21,7 @@ class CreateChildTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->service = new ParentDashboardService();
+        $this->service = new ParentDashboardService("parent@example.com");
     }
 
     public function testShouldCreateChildWithValidData(): void
