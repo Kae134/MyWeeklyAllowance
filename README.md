@@ -24,6 +24,12 @@ MyWeeklyAllowance permet aux parents de gérer un "porte-monnaie virtuel" pour l
 composer install
 ```
 
+### Lancement de l'App
+
+```bash
+php -S localhost:8000 -t public
+```
+
 ## 🧪 Tests
 
 ### Lancer les tests
