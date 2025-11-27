@@ -6,7 +6,8 @@ use MyWeeklyAllowance\Interface\ChildDashboardServiceInterface;
 use MyWeeklyAllowance\Repository\UserRepository;
 use MyWeeklyAllowance\Validator\PasswordValidator;
 use MyWeeklyAllowance\Validator\AmountValidator;
-use MyWeeklyAllowance\Exception\PasswordMismatchException;
+use MyWeeklyAllowance\Helper\AuthenticationHelper;
+use MyWeeklyAllowance\Helper\BalanceHelper;
 use MyWeeklyAllowance\Exception\InsufficientFundsException;
 
 class ChildDashboardService implements ChildDashboardServiceInterface
@@ -26,11 +27,11 @@ class ChildDashboardService implements ChildDashboardServiceInterface
         PasswordValidator::validate($password);
         AmountValidator::validate($amount);
 
-        $child = $this->userRepository->findByEmail($this->childEmail);
-
-        if ($password !== $child["password"]) {
-            throw new PasswordMismatchException("Password does not match");
-        }
+        AuthenticationHelper::verifyUserPassword(
+            $this->userRepository,
+            $this->childEmail,
+            $password,
+        );
 
         $currentBalance = $this->userRepository->getUserBalance(
             $this->childEmail,
@@ -40,14 +41,11 @@ class ChildDashboardService implements ChildDashboardServiceInterface
             throw new InsufficientFundsException("Insufficient funds");
         }
 
-        $this->userRepository->updateUserBalance(
+        $newBalance = $currentBalance - $amount;
+        BalanceHelper::updateUserAndChildBalance(
+            $this->userRepository,
             $this->childEmail,
-            $currentBalance - $amount,
-        );
-
-        $this->userRepository->updateChildBalance(
-            $this->childEmail,
-            $currentBalance - $amount,
+            $newBalance,
         );
     }
 
@@ -61,20 +59,23 @@ class ChildDashboardService implements ChildDashboardServiceInterface
         PasswordValidator::validate($password);
         AmountValidator::validate($amount);
 
+        AuthenticationHelper::verifyUserPassword(
+            $this->userRepository,
+            $childEmail,
+            $password,
+        );
+
         $currentBalance = $this->userRepository->getUserBalance($childEmail);
 
         if ($currentBalance < $amount) {
             throw new InsufficientFundsException("Insufficient funds");
         }
 
-        $this->userRepository->updateUserBalance(
+        $newBalance = $currentBalance - $amount;
+        BalanceHelper::updateUserAndChildBalance(
+            $this->userRepository,
             $childEmail,
-            $currentBalance - $amount,
-        );
-
-        $this->userRepository->updateChildBalance(
-            $childEmail,
-            $currentBalance - $amount,
+            $newBalance,
         );
 
         return $this->userRepository->createExpense(

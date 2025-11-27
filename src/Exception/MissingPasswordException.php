@@ -2,6 +2,4 @@
 
 namespace MyWeeklyAllowance\Exception;
 
-class MissingPasswordException extends \Exception
-{
-}
+class MissingPasswordException extends \Exception {}

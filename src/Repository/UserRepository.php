@@ -32,6 +32,9 @@ class UserRepository
     }
 
     // Input: userData (array) | Output: void
+    /**
+     * @param array $userData
+     */
     public function createUser(array $userData): void
     {
         $stmt = $this->db->prepare("
@@ -93,6 +96,9 @@ class UserRepository
     }
 
     // Input: childData (array) | Output: void
+    /**
+     * @param array $childData
+     */
     public function createChild(array $childData): void
     {
         $stmt = $this->db->prepare("

@@ -22,26 +22,26 @@ class SpendMoneyTest extends TestCase
 
     public function testShouldRemoveMoneyFromChild(): void
     {
-        $this->service->spendMoney("ChildPassword123!", 25.0);
+        $this->service->spendMoney("ValidPassword123!", 25.0);
         $this->assertTrue(true);
     }
 
     public function testShouldThrowExceptionWhenNotEnoughMoney(): void
     {
         $this->expectException(InsufficientFundsException::class);
-        $this->service->spendMoney("ChildPassword123!", 10000.0);
+        $this->service->spendMoney("ValidPassword123!", 10000.0);
     }
 
     public function testShouldThrowExceptionWhenAmountIsMissing(): void
     {
         $this->expectException(MissingAmountException::class);
-        $this->service->spendMoney("ChildPassword123!", 0.0);
+        $this->service->spendMoney("ValidPassword123!", 0.0);
     }
 
     public function testShouldThrowExceptionWhenAmountIsInvalid(): void
     {
         $this->expectException(InvalidAmountException::class);
-        $this->service->spendMoney("ChildPassword123!", -25.0);
+        $this->service->spendMoney("ValidPassword123!", -25.0);
     }
 
     public function testShouldThrowExceptionWhenPasswordDoesNotMatchParent(): void

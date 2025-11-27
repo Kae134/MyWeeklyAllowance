@@ -26,7 +26,7 @@ class DepositMoneyTest extends TestCase
     public function testShouldAddMoneyToChildAccount(): void
     {
         $this->service->depositMoney(
-            "ParentPassword123!",
+            "ValidPassword123!",
             "child@example.com",
             50.0,
         );
@@ -36,7 +36,7 @@ class DepositMoneyTest extends TestCase
     public function testShouldRemoveMoneyFromParent(): void
     {
         $this->service->depositMoney(
-            "ParentPassword123!",
+            "ValidPassword123!",
             "child@example.com",
             50.0,
         );
@@ -47,7 +47,7 @@ class DepositMoneyTest extends TestCase
     {
         $this->expectException(InsufficientFundsException::class);
         $this->service->depositMoney(
-            "ParentPassword123!",
+            "ValidPassword123!",
             "child@example.com",
             10000.0,
         );
@@ -57,7 +57,7 @@ class DepositMoneyTest extends TestCase
     {
         $this->expectException(MissingAmountException::class);
         $this->service->depositMoney(
-            "ParentPassword123!",
+            "ValidPassword123!",
             "child@example.com",
             0.0,
         );
@@ -67,7 +67,7 @@ class DepositMoneyTest extends TestCase
     {
         $this->expectException(InvalidAmountException::class);
         $this->service->depositMoney(
-            "ParentPassword123!",
+            "ValidPassword123!",
             "child@example.com",
             -50.0,
         );
@@ -77,7 +77,7 @@ class DepositMoneyTest extends TestCase
     {
         $this->expectException(EmailNotFoundInDatabaseException::class);
         $this->service->depositMoney(
-            "ParentPassword123!",
+            "ValidPassword123!",
             "unknown@example.com",
             50.0,
         );
@@ -86,14 +86,14 @@ class DepositMoneyTest extends TestCase
     public function testShouldThrowExceptionWhenChildEmailIsMissing(): void
     {
         $this->expectException(MissingEmailException::class);
-        $this->service->depositMoney("ParentPassword123!", "", 50.0);
+        $this->service->depositMoney("ValidPassword123!", "", 50.0);
     }
 
     public function testShouldThrowExceptionWhenChildEmailIsInvalid(): void
     {
         $this->expectException(InvalidEmailException::class);
         $this->service->depositMoney(
-            "ParentPassword123!",
+            "ValidPassword123!",
             "invalid-email",
             50.0,
         );

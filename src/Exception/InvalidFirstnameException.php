@@ -2,6 +2,4 @@
 
 namespace MyWeeklyAllowance\Exception;
 
-class InvalidFirstnameException extends \Exception
-{
-}
+class InvalidFirstnameException extends \Exception {}

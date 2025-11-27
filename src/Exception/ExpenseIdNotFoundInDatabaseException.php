@@ -2,6 +2,4 @@
 
 namespace MyWeeklyAllowance\Exception;
 
-class ExpenseIdNotFoundInDatabaseException extends \Exception
-{
-}
+class ExpenseIdNotFoundInDatabaseException extends \Exception {}

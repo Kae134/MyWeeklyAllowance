@@ -9,8 +9,8 @@ use MyWeeklyAllowance\Validator\EmailValidator;
 use MyWeeklyAllowance\Validator\PasswordValidator;
 use MyWeeklyAllowance\Validator\NameValidator;
 use MyWeeklyAllowance\Validator\FirstnameValidator;
+use MyWeeklyAllowance\Helper\AuthenticationHelper;
 use MyWeeklyAllowance\Exception\EmailNotFoundInDatabaseException;
-use MyWeeklyAllowance\Exception\PasswordMismatchException;
 
 class AuthService implements AuthServiceInterface
 {
@@ -35,9 +35,11 @@ class AuthService implements AuthServiceInterface
             );
         }
 
-        if ($user["password"] !== $password) {
-            throw new PasswordMismatchException("Password does not match");
-        }
+        AuthenticationHelper::verifyUserPassword(
+            $this->userRepository,
+            $email,
+            $password,
+        );
 
         return new UserData(
             $user["email"],

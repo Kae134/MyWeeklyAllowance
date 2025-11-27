@@ -10,9 +10,10 @@ use MyWeeklyAllowance\Validator\PasswordValidator;
 use MyWeeklyAllowance\Validator\NameValidator;
 use MyWeeklyAllowance\Validator\FirstnameValidator;
 use MyWeeklyAllowance\Validator\AmountValidator;
+use MyWeeklyAllowance\Helper\AuthenticationHelper;
+use MyWeeklyAllowance\Helper\BalanceHelper;
 use MyWeeklyAllowance\Exception\EmailAlreadyInUseException;
 use MyWeeklyAllowance\Exception\EmailNotFoundInDatabaseException;
-use MyWeeklyAllowance\Exception\PasswordMismatchException;
 use MyWeeklyAllowance\Exception\InsufficientFundsException;
 use MyWeeklyAllowance\Exception\MissingExpenseIdException;
 use MyWeeklyAllowance\Exception\ExpenseIdNotFoundInDatabaseException;
@@ -35,40 +36,14 @@ class ParentDashboardService implements ParentDashboardServiceInterface
         string $name,
         string $firstname,
     ): ChildData {
-        EmailValidator::validate($email);
-        PasswordValidator::validate($password);
-        NameValidator::validate($name);
-        FirstnameValidator::validate($firstname);
+        $this->validateChildData($email, $password, $name, $firstname);
 
-        $existingUser = $this->userRepository->findByEmail($email);
-        if (
-            $existingUser !== null &&
-            $this->UserRepository->emailExists($email)
-        ) {
+        if ($this->userRepository->emailExists($email)) {
             throw new EmailAlreadyInUseException("Email is already in use");
         }
 
-        $userData = [
-            "email" => $email,
-            "password" => $password,
-            "name" => $name,
-            "firstname" => $firstname,
-            "userType" => "child",
-            "balance" => 0.0,
-        ];
-
-        $this->userRepository->createUser($userData);
-
-        $childData = [
-            "email" => $email,
-            "parentEmail" => $this->parentEmail,
-            "name" => $name,
-            "firstname" => $firstname,
-            "balance" => 0.0,
-            "weeklyAllowance" => 0.0,
-        ];
-
-        $this->userRepository->createChild($childData);
+        $this->createUserAccount($email, $password, $name, $firstname);
+        $this->createChildAccount($email, $name, $firstname);
 
         return new ChildData($email, $name, $firstname, 0.0, 0.0);
     }
@@ -89,15 +64,13 @@ class ParentDashboardService implements ParentDashboardServiceInterface
         EmailValidator::validate($childEmail);
         AmountValidator::validate($amount);
 
-        $parent = $this->userRepository->findByEmail($this->parentEmail);
-        if ($parent === null || $parent["password"] !== $parentPassword) {
-            throw new PasswordMismatchException(
-                "Password does not match parent",
-            );
-        }
+        AuthenticationHelper::verifyUserPassword(
+            $this->userRepository,
+            $this->parentEmail,
+            $parentPassword,
+        );
 
-        $child = $this->userRepository->findByEmail($childEmail);
-        if ($child === null) {
+        if (!$this->userRepository->emailExists($childEmail)) {
             throw new EmailNotFoundInDatabaseException("Child email not found");
         }
 
@@ -114,12 +87,8 @@ class ParentDashboardService implements ParentDashboardServiceInterface
         );
 
         $childBalance = $this->userRepository->getUserBalance($childEmail);
-        $this->userRepository->updateUserBalance(
-            $childEmail,
-            $childBalance + $amount,
-        );
-
-        $this->userRepository->updateChildBalance(
+        BalanceHelper::updateUserAndChildBalance(
+            $this->userRepository,
             $childEmail,
             $childBalance + $amount,
         );
@@ -161,5 +130,55 @@ class ParentDashboardService implements ParentDashboardServiceInterface
             $this->parentEmail,
             $currentBalance + $amount,
         );
+    }
+
+    // Input: email (string), password (string), name (string), firstname (string) | Output: void
+    private function validateChildData(
+        string $email,
+        string $password,
+        string $name,
+        string $firstname,
+    ): void {
+        EmailValidator::validate($email);
+        PasswordValidator::validate($password);
+        NameValidator::validate($name);
+        FirstnameValidator::validate($firstname);
+    }
+
+    // Input: email (string), password (string), name (string), firstname (string) | Output: void
+    private function createUserAccount(
+        string $email,
+        string $password,
+        string $name,
+        string $firstname,
+    ): void {
+        $userData = [
+            "email" => $email,
+            "password" => $password,
+            "name" => $name,
+            "firstname" => $firstname,
+            "userType" => "child",
+            "balance" => 0.0,
+        ];
+
+        $this->userRepository->createUser($userData);
+    }
+
+    // Input: email (string), name (string), firstname (string) | Output: void
+    private function createChildAccount(
+        string $email,
+        string $name,
+        string $firstname,
+    ): void {
+        $childData = [
+            "email" => $email,
+            "parentEmail" => $this->parentEmail,
+            "name" => $name,
+            "firstname" => $firstname,
+            "balance" => 0.0,
+            "weeklyAllowance" => 0.0,
+        ];
+
+        $this->userRepository->createChild($childData);
     }
 }
