@@ -248,7 +248,7 @@ Lines:    94.17% (323/343)
 
 ## 👥 Auteur
 
-Projet réalisé dans le cadre de l'apprentissage du TDD et des bonnes pratiques de développement.
+[Kae](https://github.com/Kae134)
 
 ## 📝 Licence
 
