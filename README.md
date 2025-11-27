@@ -232,16 +232,6 @@ Lines:    94.17% (323/343)
 ✅ **ISP** (Interface Segregation Principle) : Interfaces spécifiques  
 ✅ **DIP** (Dependency Inversion Principle) : Dépendances via abstractions  
 
-## 📈 Métriques de Qualité
-
-| Métrique | Valeur | Status |
-|----------|--------|--------|
-| Tests réussis | 67/67 | ✅ |
-| Couverture de code | 94.17% | ✅ |
-| Duplication de code | Faible (-70%) | ✅ |
-| Complexité cyclomatique | Basse | ✅ |
-| Maintenabilité | Excellente | ⭐⭐⭐ |
-
 ## 🛠️ Technologies Utilisées
 
 - **PHP 8.4** : Langage principal
